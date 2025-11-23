@@ -382,27 +382,42 @@ if (getStartedForm) {
             submitBtn.textContent = 'Submitting...';
         }
         
-        // Simulate form submission (replace with actual API call)
+        // Submit to Formspree
         try {
-            // Here you would make an actual API call
-            // const response = await fetch('/api/submit-form', {
-            //     method: 'POST',
-            //     body: formData
-            // });
+            const response = await fetch('https://formspree.io/f/xdkjybwz', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
             
-            // Simulate API delay
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            
-            // Show success view
-            formView.style.display = 'none';
-            successView.style.display = 'block';
-            
-            // Log form data (remove in production)
-            console.log('Form submitted:', Object.fromEntries(formData));
+            if (response.ok) {
+                // Show success view
+                formView.style.display = 'none';
+                successView.style.display = 'block';
+                
+                // Reset form for next use
+                getStartedForm.reset();
+                clearErrors();
+                messageField.classList.remove('visible');
+            } else {
+                // Handle Formspree errors
+                const data = await response.json();
+                if (data.errors) {
+                    alert('There was an error submitting your form. Please check your inputs and try again.');
+                } else {
+                    alert('There was an error submitting your form. Please try again.');
+                }
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Start My Guidance →';
+                }
+            }
             
         } catch (error) {
             console.error('Error submitting form:', error);
-            alert('There was an error submitting your form. Please try again.');
+            alert('There was an error submitting your form. Please check your connection and try again.');
             if (submitBtn) {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Start My Guidance →';
