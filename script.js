@@ -384,7 +384,7 @@ if (getStartedForm) {
         
         // Submit to Formspree
         try {
-            const response = await fetch('https://formspree.io/f/xdkjybwz', {
+            const response = await fetch('https://formspree.io/f/mjkzjzzd', {
                 method: 'POST',
                 body: formData,
                 headers: {
